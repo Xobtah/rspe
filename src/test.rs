@@ -14,20 +14,19 @@ mod tests {
 
     #[test]
     fn test_get_headers_size() {
-        assert_eq!(get_headers_size(&RAW_DATA.to_vec()), 1024);
+        assert_eq!(get_headers_size(&RAW_DATA), 1024);
     }
 
     #[test]
     fn test_get_image_size() {
-        let buffer = RAW_DATA.to_vec();
-        assert_eq!(get_image_size(&buffer), 28672);
+        assert_eq!(get_image_size(&RAW_DATA), 28672);
     }
 
     #[test]
     fn test_write_sections() {
-        let buffer = RAW_DATA.to_vec();
-        let _headerssize = get_headers_size(&buffer);
-        let imagesize = get_image_size(&buffer);
+        let _headerssize = get_headers_size(&RAW_DATA);
+        let imagesize = get_image_size(&RAW_DATA);
+        let buf_ptr = RAW_DATA.as_ptr() as *const c_void;
         let baseptr = unsafe {
             VirtualAlloc(
                 core::ptr::null_mut(),
@@ -36,17 +35,17 @@ mod tests {
                 PAGE_EXECUTE_READWRITE,
             )
         };
-        let dosheader = get_dos_header(buffer.as_ptr() as *const c_void);
-        let ntheader = get_nt_header(buffer.as_ptr() as *const c_void, dosheader);
-        write_sections(baseptr, buffer.clone(), ntheader, dosheader);
+        let dosheader = get_dos_header(buf_ptr);
+        let ntheader = get_nt_header(buf_ptr, dosheader);
+        write_sections(baseptr, &RAW_DATA, ntheader, dosheader);
         let _ = baseptr;
     }
 
     #[test]
     fn test_write_import_table() {
-        let buffer = RAW_DATA.to_vec();
-        let _headerssize = get_headers_size(&buffer);
-        let imagesize = get_image_size(&buffer);
+        let _headerssize = get_headers_size(&RAW_DATA);
+        let imagesize = get_image_size(&RAW_DATA);
+        let buf_ptr = RAW_DATA.as_ptr() as *const c_void;
         let baseptr = unsafe {
             VirtualAlloc(
                 core::ptr::null_mut(),
@@ -55,17 +54,17 @@ mod tests {
                 PAGE_EXECUTE_READWRITE,
             )
         };
-        let dosheader = get_dos_header(buffer.as_ptr() as *const c_void);
-        let ntheader = get_nt_header(buffer.as_ptr() as *const c_void, dosheader);
+        let dosheader = get_dos_header(buf_ptr);
+        let ntheader = get_nt_header(buf_ptr, dosheader);
         write_import_table(baseptr, ntheader as *const c_void);
         let _ = baseptr;
     }
 
     #[test]
     fn test_fix_base_relocations() {
-        let buffer = RAW_DATA.to_vec();
-        let _headerssize = get_headers_size(&buffer);
-        let imagesize = get_image_size(&buffer);
+        let _headerssize = get_headers_size(&RAW_DATA);
+        let imagesize = get_image_size(&RAW_DATA);
+        let buf_ptr = RAW_DATA.as_ptr() as *const c_void;
         let baseptr = unsafe {
             VirtualAlloc(
                 core::ptr::null_mut(),
@@ -74,8 +73,8 @@ mod tests {
                 PAGE_EXECUTE_READWRITE,
             )
         };
-        let dosheader = get_dos_header(buffer.as_ptr() as *const c_void);
-        let ntheader = get_nt_header(buffer.as_ptr() as *const c_void, dosheader);
+        let dosheader = get_dos_header(buf_ptr);
+        let ntheader = get_nt_header(buf_ptr, dosheader);
         fix_base_relocations(baseptr, ntheader);
         let _ = baseptr;
     }

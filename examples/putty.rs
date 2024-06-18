@@ -18,10 +18,10 @@ fn main() {
 
     // Load the file based on the target architecture
     // Check if the file is a .NET assembly
-    if !check_dotnet(data.clone()) {
+    if !check_dotnet(&data) {
         // If it is not, use the reflective loader to load the file
         unsafe {
-            reflective_loader(data.clone());
+            let _ = reflective_loader(&data);
         };
     }
 }

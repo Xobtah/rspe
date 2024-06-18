@@ -83,12 +83,12 @@ pub fn read_string_from_memory(baseaddress: *const u8) -> String {
 ///
 /// # Arguments
 ///
-/// * `pe` - A vector of u8 representing the PE file to check.
+/// * `pe` - A slice of u8 representing the PE file to check.
 ///
 /// # Returns
 ///
 /// A boolean value indicating whether the PE file contains the .NET flag.
-pub fn check_dotnet(pe: Vec<u8>) -> bool {
+pub fn check_dotnet(pe: &[u8]) -> bool {
     const DOTNET_FLAG: [u8; 13] = [
         0x2E, 0x4E, 0x45, 0x54, 0x46, 0x72, 0x61, 0x6D, 0x65, 0x77, 0x6F, 0x72, 0x6B,
     ];

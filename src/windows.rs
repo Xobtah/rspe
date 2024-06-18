@@ -1,5 +1,4 @@
 #![allow(non_snake_case, non_camel_case_types)]
-
 use core::ffi::c_void;
 
 pub type VIRTUAL_ALLOCATION_TYPE = u32;

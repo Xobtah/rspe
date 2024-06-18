@@ -1,7 +1,5 @@
 use core::ffi::c_void;
 
-use alloc::vec::Vec;
-
 use crate::windows::{
     GetProcAddress, LoadLibraryA, IMAGE_BASE_RELOCATION, IMAGE_DIRECTORY_ENTRY_BASERELOC,
     IMAGE_DIRECTORY_ENTRY_IMPORT, IMAGE_DOS_HEADER, IMAGE_IMPORT_DESCRIPTOR, IMAGE_NT_SIGNATURE,
@@ -189,7 +187,7 @@ fn get_number_of_sections(ntheader: *const c_void) -> u16 {
 /// # Arguments
 ///
 /// * `baseptr` - A pointer to the base address of the allocated memory in the target process.
-/// * `buffer` - A vector containing the bytes of the PE file to be loaded.
+/// * `buffer` - A slice containing the bytes of the PE file to be loaded.
 /// * `ntheader` - A pointer to the NT header of the PE file.
 /// * `dosheader` - A pointer to the DOS header of the PE file.
 pub fn write_sections(
@@ -197,7 +195,7 @@ pub fn write_sections(
     // A pointer to the base address of the allocated memory in the target process.
     baseptr: *const c_void,
     // A vector containing the bytes of the PE file to be loaded.
-    buffer: Vec<u8>,
+    buffer: &[u8],
     // A pointer to the NT header of the PE file.
     ntheader: *const c_void,
     // A pointer to the DOS header of the PE file.
